@@ -15,7 +15,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/chater-marzougui/Education-Help-Gemini">
-    <img src="./assets/logo.png" alt="Logo" height="256">
+    <img src="./assets/logo.png" alt="Logo" height="192">
   </a>
   <a href="https://chater-marzougui.github.io/pdf-ai-viewer">
     <h1 width="35px">PDF AI Viewer
@@ -136,17 +136,17 @@
 
 ```
 pdf-ai-viewer/
-├── index.html                 
+├── index.html      
+├── viewer.html
 ├── assets/     
 │   ├── logo.png
 │   ├── screenshot1.png
 │   ├── screenshot2.png
-│   ├── css/
-│   │   └── style.css
-│   └── js/
-│       ├── main.js
-│       ├── pdf-viewer.js
-│       └── ai-service.js
+├── static/
+│   └── home.css
+│   └── viewer.css
+│   └── home.js
+│   └── viewer.js
 ├── LICENSE
 └── README.md
 ```
