@@ -552,7 +552,7 @@ function addUserMessage(message) {
 }
 
 function addAssistantMessage(message, type = 'text') {
-    const messageElement = createMessageElement('assistant', message, type);
+    const messageElement = createMessageElement('assistant', message, "markdown");
     document.getElementById('chatMessages').appendChild(messageElement);
     scrollToBottom();
 }
