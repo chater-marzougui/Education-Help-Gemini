@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF AI Viewer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link rel="stylesheet" href="./static/viewer.css">
+    <style>
+        /* New styles for file upload section */
+        
+    </style>
+</head>
+<body>
+    <!-- File Upload Section -->
+    <div class="setup-container" id="setupContainer">
+        <div class="upload-section">
+            <h2 class="upload-title">Upload your PDF</h2>
+            <p class="upload-description">Drag & drop your PDF file or click to browse.</p>
+            
+            <div class="drop-area" id="dropArea">
+                <div class="upload-icon">📄</div>
+                <p>Drag & drop your PDF here</p>
+                <div class="file-input-container">
+                    <input type="file" id="pdfUpload" class="file-input" accept="application/pdf" />
+                    <label for="pdfUpload" class="file-input-label">Browse Files</label>
+                </div>
+            </div>
+            
+            <div class="file-info" id="fileInfo"></div>
+            <div class="file-error" id="fileError"></div>
+            <div class="loading-spinner" id="loadingSpinner"></div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer (Initially Hidden) -->
+    <div class="viewer-container" id="viewerContainer">
+        <!-- PDF Section -->
+        <div class="pdf-section">
+            <div class="pdf-header">
+                <div class="pdf-title">
+                    <span>📄 PDF Viewer</span>
+                    <span class="filename" id="pdfFileName"></span>
+                </div>
+                
+                <div class="pdf-controls">
+                    <!-- Navigation -->
+                    <div class="control-group">
+                        <button class="control-btn" id="prevPage" title="Previous page">
+                            ⏮️
+                        </button>
+                        <button class="control-btn" id="nextPage" title="Next page">
+                            ⏭️
+                        </button>
+                        <span class="page-info">
+                            <span id="currentPage">1</span> / <span id="totalPages">1</span>
+                        </span>
+                    </div>
+
+                    <!-- Zoom Controls -->
+                    <div class="control-group">
+                        <button class="control-btn" id="zoomOut" title="Zoom out">
+                            🔍➖
+                        </button>
+                        <span class="zoom-info" id="zoomLevel">100%</span>
+                        <button class="control-btn" id="zoomIn" title="Zoom in">
+                            🔍➕
+                        </button>
+                        <button class="control-btn" id="fitToWidth" title="Fit to width">
+                            ↔️
+                        </button>
+                    </div>
+
+                    <!-- Additional Controls -->
+                    <div class="control-group">
+                        <button class="control-btn" id="backToSetup" title="Back to setup">
+                            ⬅️
+                        </button>
+                        <button class="control-btn" id="uploadNew" title="Upload new PDF">
+                            📤
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pdf-viewer" id="pdfViewer">
+                <button class="nav-arrow prev" id="navPrev" title="Previous page">❮</button>
+                <button class="nav-arrow next" id="navNext" title="Next page">❯</button>
+                
+                <div class="pdf-canvas-container" id="canvasContainer">
+                    <canvas id="pdfCanvas"></canvas>
+                    <div class="analyze-trigger">
+                        <button class="analyze-btn" id="analyzeSlide" title="Analyze this slide with AI">
+                            🤖
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <div class="chat-title">
+                    🤖 AI Assistant
+                </div>
+                <div class="chat-stats" id="chatStats">
+                    Ready to help
+                </div>
+                <button class="chat-clear" id="clearChat" title="Clear chat history">
+                    🗑️
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message system">
+                    <div class="message-content">
+                        Welcome! Upload a PDF and I'll help explain each slide. You can also ask me questions about the content.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        id="chatInput" 
+                        class="chat-input" 
+                        placeholder="Ask a question about the slide or request analysis..."
+                        rows="1"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="chat-send" id="sendMessage" title="Send message">
+                            ➤
+                        </button>
+                        <button class="analyze-slide-btn chat-send" id="analyzeSlide2" title="Analyze this slide with AI">
+                            🤖
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="./static/viewer.js"></script>   
+</body>
+</html>

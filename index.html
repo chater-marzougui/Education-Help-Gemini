@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF AI Viewer - Setup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/home.css">
+    
+</head>
+<body>
+    <div class="setup-container">
+        <div class="header">
+            <h1>PDF AI Viewer</h1>
+            <p>Upload your PDF and get AI-powered slide explanations</p>
+        </div>
+
+        <div class="content">
+            <!-- Step 1: API Key Setup -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title">Configure Google AI API</h2>
+                </div>
+                <div class="step-content">
+                    <div id="apiKeyStatus" class="api-key-status disconnected">
+                        <span>🔑</span>
+                        <span>API Key Not Configured</span>
+                    </div>
+
+                    <div class="security-notice">
+                        <div class="security-notice-icon">🔒</div>
+                        <div class="security-notice-text">
+                            <strong>Security Notice:</strong> Your API key is stored locally in your browser and never sent to our servers. We prioritize your privacy and security.
+                        </div>
+                    </div>
+
+                    <div class="api-key-section">
+                        <div class="input-group">
+                            <label for="apiKey" class="input-label">Google AI Studio API Key</label>
+                            <div style="position: relative;">
+                                <input 
+                                    type="password" 
+                                    id="apiKey" 
+                                    class="input-field" 
+                                    placeholder="Enter your API key (AIza...)"
+                                    autocomplete="off"
+                                    style="padding-right: 5rem;"
+                                >
+                                <div class="input-actions">
+                                    <button type="button" id="toggleApiKey" class="input-button" title="Toggle visibility">
+                                        👁️
+                                    </button>
+                                    <button type="button" id="validateApiKey" class="input-button" title="Validate API key">
+                                        ✓
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                            <button type="button" id="saveApiKey" class="btn btn-primary">
+                                <span>💾</span>
+                                Save API Key
+                            </button>
+                            <button type="button" id="clearApiKey" class="btn btn-secondary">
+                                <span>🗑️</span>
+                                Clear
+                            </button>
+                        </div>
+
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Don't have an API key? 
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="api-key-link">
+                                Get one from Google AI Studio →
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Launch Viewer -->
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title">Launch Viewer</h2>
+                </div>
+                <div class="step-content">
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        Once you've configured your API key, you can launch the viewer to analyze your slides.
+                    </p>
+                    <div class="actions">
+                        <button type="button" id="launchViewer" class="btn btn-success" disabled>
+                            <span>🚀</span>
+                            Launch PDF AI Viewer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Preparing Viewer...</h3>
+            <p style="color: var(--text-secondary);">Please wait while we process viewer</p>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer"></div>
+
+    <script src="./static/home.js"></script>
+</body>
+</html> 
+
