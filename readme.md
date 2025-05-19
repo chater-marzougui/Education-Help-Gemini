@@ -14,10 +14,10 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/chater-marzougui/Education-Help-Gemini">
+  <a href="https://chater-marzougui.github.io/Education-Help-Gemini">
     <img src="./assets/logo.png" alt="Logo" height="192">
   </a>
-  <a href="https://chater-marzougui.github.io/pdf-ai-viewer">
+  <a href="https://chater-marzougui.github.io/Education-Help-Gemini">
     <h1 width="35px">PDF AI Viewer
     </h1>
   </a>
@@ -25,7 +25,7 @@
     A web-based PDF viewer with AI-powered slide analysis and explanation capabilities using Google's Gemini API.
     <br />
     <br />
-    <a href="https://chater-marzougui.github.io/pdf-ai-viewer">View Demo</a>
+    <a href="https://chater-marzougui.github.io/Education-Help-Gemini">View Demo</a>
     ·
     <a href="https://github.com/chater-marzougui/Education-Help-Gemini/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -95,13 +95,13 @@
 #### 2. Launch the Application
 
 ##### Option A: Using the hosted version
-1. Navigate to [PDF AI Viewer](https://chater-marzougui.github.io/pdf-ai-viewer)
+1. Navigate to [PDF AI Viewer](https://chater-marzougui.github.io/Education-Help-Gemini)
 2. Enter your Google AI Studio API key when prompted
 3. Upload your PDF and start exploring!
 
 ##### Option B: Local installation
 1. Clone this repository: `git clone https://github.com/chater-marzougui/Education-Help-Gemini.git`
-2. Navigate to the project directory: `cd pdf-ai-viewer`
+2. Navigate to the project directory: `cd Education-Help-Gemini`
 3. Open `index.html` in your browser
 4. Enter your Google AI Studio API key
 5. Upload your PDF and start exploring!
@@ -135,7 +135,7 @@
 ### Project Structure
 
 ```
-pdf-ai-viewer/
+Education-Help-Gemini/
 ├── index.html      
 ├── viewer.html
 ├── assets/     
