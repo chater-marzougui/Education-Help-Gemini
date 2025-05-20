@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     setupFileUpload();
 
-    const NAMESPACE = 'sup-gemini-helper';
+    const NAMESPACE = 'geminihelpercounter';
     const COUNTER_NAME = 'visitors';
     
     // Get the counter element
@@ -30,55 +30,83 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to check and update the visitor count
     function handleVisitorCount() {
         // Check if this visitor has been counted recently
-        const lastVisit = localStorage.getItem('lastVisitTimestamp');
+        const lastVisit = localStorage.getItem('lastVisitTime');
         const oneWeekInMs = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
         const currentTime = new Date().getTime();
         
+        // Safely parse the last visit time, or default to 0 if not present
+        const lastVisitTime = lastVisit ? parseInt(lastVisit, 10) : 0;
+        
         // If this is a new visitor or it's been more than a week since their last visit
-        if (!lastVisit || (currentTime - parseInt(lastVisit)) > oneWeekInMs) {
+        if (!lastVisit || (currentTime - lastVisitTime) > oneWeekInMs) {
             // Increment the counter (new visitor or returning after a week)
-            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`)
-                .then(response => response.json())
-                .then(data => {
-                    counterElement.textContent = data.count.toLocaleString();
-                    // Store the timestamp of this visit
-                    localStorage.setItem('lastVisitTimestamp', currentTime.toString());
-                })
-                .catch(error => {
-                    console.error('Error updating visitor counter:', error);
-                    counterElement.textContent = 'Error';
-                });
+            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                counterElement.textContent = data.count.toLocaleString();
+                // Store the timestamp of this visit
+                localStorage.setItem('lastVisitTime', currentTime.toString());
+            })
+            .catch(error => {
+                console.error('Error updating visitor counter:', error);
+                // Try to get the current count as a fallback
+                getCurrentCount();
+            });
         } else {
             // This is a returning visitor within the past week, just get the current count
-            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/`, 
-
-                {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            )
-                .then(response => response.json())
-                .then(data => {
-                    counterElement.textContent = data.count.toLocaleString() - 1;
-                })
-                .catch(error => {
-                    console.error('Error fetching visitor count:', error);
-                    counterElement.textContent = 'Error';
-                });
+            getCurrentCount();
         }
     }
     
-    // Call the function to handle the visitor count
-    handleVisitorCount();
-    function pollVisitorCount() {
-        setInterval(() => {
-            handleVisitorCount();
-        }, 10000);
+    // Function to get the current count without incrementing
+    function getCurrentCount() {
+        // First, up the counter (to ensure it exists), then down and get the response from the down one
+        fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`, {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+        })
+        .then(() => {
+            // Now down and return the response from the down one
+            return fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/down`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            counterElement.textContent = data.count.toLocaleString();
+        })
+        .catch(error => {
+            console.error('Error fetching visitor count:', error);
+            counterElement.textContent = 'Loading...';
+        });
     }
-
-    pollVisitorCount();
+    
+    // Call the function to handle the visitor count on page load
+    handleVisitorCount();
+    
+    setInterval(() => {
+        handleVisitorCount();
+    }, 10000);
 });
 
 function checkApiKey() {
