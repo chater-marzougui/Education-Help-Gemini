@@ -20,6 +20,60 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     setupFileUpload();
+
+    const NAMESPACE = 'sup-gemini-helper';
+    const COUNTER_NAME = 'visitors';
+    
+    // Get the counter element
+    const counterElement = document.getElementById('count');
+    
+    // Function to check and update the visitor count
+    function handleVisitorCount() {
+        // Check if this visitor has been counted recently
+        const lastVisit = localStorage.getItem('lastVisitTimestamp');
+        const oneWeekInMs = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+        const currentTime = new Date().getTime();
+        
+        // If this is a new visitor or it's been more than a week since their last visit
+        if (!lastVisit || (currentTime - parseInt(lastVisit)) > oneWeekInMs) {
+            // Increment the counter (new visitor or returning after a week)
+            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`)
+                .then(response => response.json())
+                .then(data => {
+                    counterElement.textContent = data.count.toLocaleString();
+                    // Store the timestamp of this visit
+                    localStorage.setItem('lastVisitTimestamp', currentTime.toString());
+                })
+                .catch(error => {
+                    console.error('Error updating visitor counter:', error);
+                    counterElement.textContent = 'Error';
+                });
+        } else {
+            // This is a returning visitor within the past week, just get the current count
+            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`)
+                .then(response => response.json())
+                .then(data => {
+                    counterElement.textContent = data.count.toLocaleString() - 1;
+                })
+                .then(() => {
+                    fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/down`)
+                })
+                .catch(error => {
+                    console.error('Error fetching visitor count:', error);
+                    counterElement.textContent = 'Error';
+                });
+        }
+    }
+    
+    // Call the function to handle the visitor count
+    handleVisitorCount();
+    function pollVisitorCount() {
+        setInterval(() => {
+            handleVisitorCount();
+        }, 10000);
+    }
+
+    pollVisitorCount();
 });
 
 function checkApiKey() {
@@ -149,7 +203,7 @@ async function initViewer(pdfData, fileName) {
         pdfDoc = await loadingTask.promise;
 
         // Update UI
-        document.getElementById('pdfFileName').textContent = fileName;
+        document.getElementById('pdfFileName').textContent = fileName.slice(0, 27) + '...';
         document.getElementById('totalPages').textContent = pdfDoc.numPages;
 
         // Setup canvas
