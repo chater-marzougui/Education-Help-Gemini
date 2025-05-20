@@ -469,7 +469,7 @@ async function sendToGemini(message, imageData = null) {
         // Construct the prompt to request a formatted response
         const systemPrompt = `You are a helpful assistant to help students prepare for exams. Users will ask
 questions about slides in a pdf, or questions mostly about in the context of the provided images.
-Elaborate on hard terms if they are complex or missing context.
+Keep your answers direct and short.
 IMPORTANT: Format your response as a JSON object with two properties: 'content' containing your actual response,
 and 'type' which should be either 'text' for plain text or 'markdown' when you're using markdown
 formatting with headings, lists, code blocks, or other formatting.
