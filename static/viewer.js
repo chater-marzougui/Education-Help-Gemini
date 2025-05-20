@@ -50,13 +50,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         } else {
             // This is a returning visitor within the past week, just get the current count
-            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/up`)
+            fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/`, 
+
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
                 .then(response => response.json())
                 .then(data => {
                     counterElement.textContent = data.count.toLocaleString() - 1;
-                })
-                .then(() => {
-                    fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${COUNTER_NAME}/down`)
                 })
                 .catch(error => {
                     console.error('Error fetching visitor count:', error);
@@ -574,6 +579,12 @@ Prefer markdown formatting.`;
         const data = await response.json();
 
         let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+
+        // try {
+
+        //     console.log(data.usageMetadata);
+        // }
+        // catch {}
         
         // Try to parse the response as JSON
         let contentType = 'text'; // Default to text
