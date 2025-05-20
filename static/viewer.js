@@ -13,7 +13,12 @@ let canvasPosition = { x: 0, y: 0 };
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    checkApiKey();
+    if (!checkApiKey()) {
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+        return;
+    }
     setupFileUpload();
 });
 
@@ -373,20 +378,21 @@ function handleKeydown(e) {
             break;
         case '=':
         case '+':
-            if (e.ctrlKey || e.metaKey) {
-                e.preventDefault();
-                scale = Math.min(scale * 1.2, 3.0);
-                renderPage(currentPage);
-                updateZoomDisplay();
-            }
+            e.preventDefault();
+            scale = Math.min(scale * 1.2, 3.0);
+            renderPage(currentPage);
+            updateZoomDisplay();
             break;
         case '-':
-            if (e.ctrlKey || e.metaKey) {
-                e.preventDefault();
-                scale = Math.max(scale / 1.2, 0.25);
-                renderPage(currentPage);
-                updateZoomDisplay();
-            }
+            e.preventDefault();
+            scale = Math.max(scale / 1.2, 0.25);
+            renderPage(currentPage);
+            updateZoomDisplay();
+            break;
+        // enter to analyze slide
+        case 'Enter':
+            e.preventDefault();
+            analyzeCurrentSlide();
             break;
     }
 }
@@ -470,10 +476,10 @@ async function sendToGemini(message, imageData = null) {
         const systemPrompt = `You are a helpful assistant to help students prepare for exams. Users will ask
 questions about slides in a pdf, or questions mostly about in the context of the provided images.
 Keep your answers direct and short.
-IMPORTANT: Format your response as a JSON object with two properties: 'content' containing your actual response,
-and 'type' which should be either 'text' for plain text or 'markdown' when you're using markdown
-formatting with headings, lists, code blocks, or other formatting.
-Use markdown formatting when possible.`;
+IMPORTANT: Format your response as a JSON object: 'content' containing your actual response,
+and 'type' which is either 'text' for plain text or 'markdown' for markdown.
+Answer the questions in a way that is easy to understand and follow and even if the answer is not in the provided image answer basic knowledge.
+Prefer markdown formatting.`;
 
         const chatHistoryContext = chatHistory.map(msg => ({
             role: msg.role,
@@ -516,15 +522,13 @@ Use markdown formatting when possible.`;
         let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
         
         // Try to parse the response as JSON
-        let parsedReply;
         let contentType = 'text'; // Default to text
         
         try {
-            let jsonString = extractJsonString(reply);
-            parsedReply = JSON.parse(jsonString);
-            if (parsedReply.content && parsedReply.type) {
-                reply = parsedReply.content;
-                contentType = parsedReply.type;
+            let jsonReply = extractJsonString(reply);
+            if (jsonReply.content && jsonReply.type) {
+                reply = jsonReply.content;
+                contentType = jsonReply.type;
             }
         } catch (error) {
             // If not valid JSON, use the response as-is
@@ -539,16 +543,25 @@ Use markdown formatting when possible.`;
         addErrorMessage('Failed to communicate with Gemini API: ' + error.message);
         console.error('Error details:', error);
     }
-}  
+}
 
-function extractJsonString(str) {
-    // Find the first occurrence of a JSON-like structure
-    const jsonStart = str.indexOf('{');
-    const jsonEnd = str.lastIndexOf('}');
-    if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
-        return str.substring(jsonStart, jsonEnd + 1);
+function extractJsonString(response) {
+  if (typeof response !== 'string') return response;
+  const codeBlockMatch = response.match(/```json\s*([\s\S]*?)\s*```/);
+  
+  if (codeBlockMatch && codeBlockMatch[1]) {
+    try {
+      return JSON.parse(codeBlockMatch[1].trim());
+    } catch {}
+  }
+  try {
+    // Look for any JSON-like content
+    const jsonMatch = response.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
     }
-    return str; // Return the original string if no JSON-like structure is found
+  } catch{}
+  return response;
 }
 
 function addUserMessage(message) {
@@ -558,7 +571,7 @@ function addUserMessage(message) {
 }
 
 function addAssistantMessage(message, type = 'text') {
-    const messageElement = createMessageElement('assistant', message, "markdown");
+    const messageElement = createMessageElement('assistant', message, type);
     document.getElementById('chatMessages').appendChild(messageElement);
     scrollToBottom();
 }
@@ -625,14 +638,6 @@ function createMessageElement(role, content, type = 'text') {
     if (role !== 'system' && role !== 'error') {
         const messageMeta = document.createElement('div');
         messageMeta.className = 'message-meta';
-        
-        // Add message type indicator if not basic text
-        if (type !== 'text') {
-            const typeIndicator = document.createElement('span');
-            typeIndicator.className = 'message-type';
-            typeIndicator.textContent = type;
-            messageMeta.appendChild(typeIndicator);
-        }
         
         const timeIndicator = document.createElement('span');
         timeIndicator.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
