@@ -475,8 +475,14 @@ and 'type' which should be either 'text' for plain text or 'markdown' when you'r
 formatting with headings, lists, code blocks, or other formatting.
 Use markdown formatting when possible.`;
 
+        const chatHistoryContext = chatHistory.map(msg => ({
+            role: msg.role,
+            parts: [{ text: msg.content }]
+        }));
+
         const requestBody = {
             contents: [
+                chatHistoryContext,
                 {
                     role: "user",
                     parts: [{ text: systemPrompt }]
