@@ -8,10 +8,9 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Upload } from 'lucide-react';
 import type { ChatMessage } from '@/types';
 import { sendToGemini } from '@/services/gemini';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export function ViewerPage() {
-  const [apiKey] = useLocalStorage<string>('gemini_api_key', '');
+  const [apiKey] = localStorage.getItem('gemini_api_key') || '';
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +28,7 @@ export function ViewerPage() {
   // Load file from sessionStorage on mount
   useEffect(() => {
     if (!apiKey) {
-      navigate('/Education-Help-Gemini/');
+      navigate('../');
       return;
     }
 
@@ -37,7 +36,7 @@ export function ViewerPage() {
     const pdfName = sessionStorage.getItem('selectedPDFName');
 
     if (!pdfData || !pdfName) {
-      navigate('/Education-Help-Gemini/upload');
+      navigate('../upload');
       return;
     }
 
@@ -60,13 +59,13 @@ export function ViewerPage() {
   const handleBackToSetup = useCallback(() => {
     sessionStorage.removeItem('selectedPDF');
     sessionStorage.removeItem('selectedPDFName');
-    navigate('/Education-Help-Gemini/');
+    navigate('../');
   }, [navigate]);
 
   const handleUploadNew = useCallback(() => {
     sessionStorage.removeItem('selectedPDF');
     sessionStorage.removeItem('selectedPDFName');
-    navigate('/Education-Help-Gemini/upload');
+    navigate('../upload');
   }, [navigate]);
 
   const handleSendMessage = useCallback(async (message: string) => {
