@@ -16,7 +16,7 @@
 <br />
 <div align="center">
   <a href="https://chater-marzougui.github.io/Education-Help-Gemini">
-    <img src="./assets/logo.png" alt="Logo" height="192">
+    <img src="./public/assets/logo.png" alt="Logo" height="192">
   </a>
   <a href="https://chater-marzougui.github.io/Education-Help-Gemini">
     <h1 width="35px">PDF AI Viewer
