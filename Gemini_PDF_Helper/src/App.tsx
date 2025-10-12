@@ -32,7 +32,7 @@ function App() {
     if (apiKey) {
       setView('upload');
     }
-  }, []);
+  }, [apiKey]);
 
   const handleApiKeyValidated = useCallback((key: string) => {
     setApiKey(key);

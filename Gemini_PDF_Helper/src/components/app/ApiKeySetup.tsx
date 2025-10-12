@@ -36,7 +36,7 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
         setError('Invalid API key. Please check and try again.');
         setIsValidated(false);
       }
-    } catch (err) {
+    } catch (error) {
       setError('Failed to validate API key. Please try again.');
       setIsValidated(false);
     } finally {
