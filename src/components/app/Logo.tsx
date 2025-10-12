@@ -15,11 +15,11 @@ const textSizeMap = {
   lg: 'text-3xl'
 };
 
-export function Logo({ className = '', size = 'md' }: LogoProps) {
+export function Logo({ className = '', size = 'md' }: Readonly<LogoProps>) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <img 
-        src="/assets/logo_head.png" 
+        src="/Education-Help-Gemini/assets/logo_head.png" 
         alt="PDF AI Viewer Logo" 
         className={sizeMap[size]}
       />

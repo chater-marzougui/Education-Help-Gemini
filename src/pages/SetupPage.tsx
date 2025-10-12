@@ -1,29 +1,29 @@
-import { useNavigate } from 'react-router-dom';
-import { ApiKeySetup } from '@/components/app/ApiKeySetup';
-import { Logo } from '@/components/app/Logo';
-import { SEO } from '@/components/app/SEO';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { ApiKeySetup } from "@/components/app/ApiKeySetup";
+import { Logo } from "@/components/app/Logo";
+import { SEO } from "@/components/app/SEO";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useEffect } from "react";
 
 export function SetupPage() {
-  const [apiKey, setApiKey] = useLocalStorage<string>('gemini_api_key', '');
+  const [apiKey, setApiKey] = useLocalStorage<string>("gemini_api_key", "");
   const navigate = useNavigate();
 
   // Redirect to upload page if API key already exists
   useEffect(() => {
     if (apiKey) {
-      navigate('/Education-Help-Gemini/upload');
+      navigate("/Education-Help-Gemini/upload");
     }
   }, [apiKey, navigate]);
 
   const handleApiKeyValidated = (key: string) => {
     setApiKey(key);
-    navigate('/Education-Help-Gemini/upload');
+    navigate("/Education-Help-Gemini/upload");
   };
 
   return (
     <>
-      <SEO 
+      <SEO
         title="Setup - PDF AI Viewer"
         description="Configure your Google Gemini API key to start analyzing PDFs with AI-powered insights."
       />
@@ -32,7 +32,10 @@ export function SetupPage() {
           <Logo size="md" className="justify-center" />
         </header>
         <div className="flex-1">
-          <ApiKeySetup onApiKeyValidated={handleApiKeyValidated} initialApiKey={apiKey} />
+          <ApiKeySetup
+            onApiKeyValidated={handleApiKeyValidated}
+            initialApiKey={apiKey}
+          />
         </div>
       </div>
     </>

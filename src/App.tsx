@@ -5,7 +5,7 @@ import { ViewerPage } from '@/pages/ViewerPage';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Education-Help-Gemini">
       <Routes>
         <Route path="/" element={<SetupPage />} />
         <Route path="/upload" element={<UploadPage />} />
