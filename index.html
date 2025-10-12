@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/assets/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>PDF AI Viewer - Analyze PDFs with Gemini AI</title>
+    <meta name="title" content="PDF AI Viewer - Analyze PDFs with Gemini AI" />
+    <meta name="description" content="A powerful web-based PDF viewer with AI-powered slide analysis and explanation capabilities using Google's Gemini API. Upload PDFs and get instant explanations and insights." />
+    <meta name="keywords" content="PDF viewer, AI analysis, Gemini AI, PDF helper, education, document analysis, slide explanation, AI assistant, Google AI" />
+    <meta name="author" content="Chater Marzougui" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://chater-marzougui.github.io/Education-Help-Gemini/" />
+    <meta property="og:title" content="PDF AI Viewer - Analyze PDFs with Gemini AI" />
+    <meta property="og:description" content="A powerful web-based PDF viewer with AI-powered slide analysis and explanation capabilities using Google's Gemini API." />
+    <meta property="og:image" content="https://chater-marzougui.github.io/Education-Help-Gemini/assets/logo.png" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://chater-marzougui.github.io/Education-Help-Gemini/" />
+    <meta property="twitter:title" content="PDF AI Viewer - Analyze PDFs with Gemini AI" />
+    <meta property="twitter:description" content="A powerful web-based PDF viewer with AI-powered slide analysis and explanation capabilities using Google's Gemini API." />
+    <meta property="twitter:image" content="https://chater-marzougui.github.io/Education-Help-Gemini/assets/logo.png" />
+    
+    <!-- Theme & Mobile -->
+    <meta name="theme-color" content="#6366f1" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="PDF AI Viewer" />
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+      // This script checks to see if a redirect is present in the query string,
+      // and if so, converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...)
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

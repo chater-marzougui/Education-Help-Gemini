@@ -1,43 +1,58 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Eye, EyeOff, Check, Save, Trash2 } from 'lucide-react';
-import { validateApiKey } from '@/services/gemini';
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Check, Save, Trash2 } from "lucide-react";
+import { validateApiKey } from "@/services/gemini";
+import { toast } from "sonner";
 
 interface ApiKeySetupProps {
   onApiKeyValidated: (apiKey: string) => void;
   initialApiKey?: string;
 }
 
-export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySetupProps) {
+export function ApiKeySetup({
+  onApiKeyValidated,
+  initialApiKey = "",
+}: Readonly<ApiKeySetupProps>) {
   const [apiKey, setApiKey] = useState(initialApiKey);
   const [showApiKey, setShowApiKey] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [isValidated, setIsValidated] = useState(!!initialApiKey);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleValidate = async () => {
     if (!apiKey.trim()) {
-      setError('Please enter an API key');
+      setError("Please enter an API key");
       return;
     }
 
     setIsValidating(true);
-    setError('');
-    
+    setError("");
+
     try {
       const isValid = await validateApiKey(apiKey);
       if (isValid) {
         setIsValidated(true);
-        setError('');
+        toast.success("API key validated successfully!");
+        setError("");
       } else {
-        setError('Invalid API key. Please check and try again.');
+        toast.error("Invalid API key. Please check and try again.", {
+          description: error,
+        });
         setIsValidated(false);
       }
-    } catch (error) {
-      setError('Failed to validate API key. Please try again.');
+    } catch (e: any) {
+      toast.error("Failed to validate API key. Please try again.", {
+        description: e.message,
+      });
       setIsValidated(false);
     } finally {
       setIsValidating(false);
@@ -46,16 +61,16 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
 
   const handleSave = () => {
     if (isValidated && apiKey) {
-      localStorage.setItem('gemini_api_key', apiKey);
+      localStorage.setItem("gemini_api_key", apiKey);
       onApiKeyValidated(apiKey);
     }
   };
 
   const handleClear = () => {
-    setApiKey('');
+    setApiKey("");
     setIsValidated(false);
-    setError('');
-    localStorage.removeItem('gemini_api_key');
+    setError("");
+    localStorage.removeItem("gemini_api_key");
   };
 
   return (
@@ -79,10 +94,20 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
               <h3 className="text-xl font-semibold">Configure Google AI API</h3>
             </div>
 
-            <div className={`p-4 rounded-lg ${isValidated ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'}`}>
+            <div
+              className={`p-4 rounded-lg ${
+                isValidated
+                  ? "bg-green-50 border border-green-200"
+                  : "bg-gray-50 border border-gray-200"
+              }`}
+            >
               <div className="flex items-center gap-2 text-sm font-medium">
                 <span>🔑</span>
-                <span>{isValidated ? 'API Key Configured' : 'API Key Not Configured'}</span>
+                <span>
+                  {isValidated
+                    ? "API Key Configured"
+                    : "API Key Not Configured"}
+                </span>
               </div>
             </div>
 
@@ -90,7 +115,9 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
               <div className="flex gap-3">
                 <div className="text-2xl">🔒</div>
                 <div className="flex-1 text-sm">
-                  <strong>Security Notice:</strong> Your API key is stored locally in your browser and never sent to our servers. We prioritize your privacy and security.
+                  <strong>Security Notice:</strong> Your API key is stored
+                  locally in your browser and never sent to our servers. We
+                  prioritize your privacy and security.
                 </div>
               </div>
             </div>
@@ -100,12 +127,12 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
               <div className="relative">
                 <Input
                   id="apiKey"
-                  type={showApiKey ? 'text' : 'password'}
+                  type={showApiKey ? "text" : "password"}
                   value={apiKey}
                   onChange={(e) => {
                     setApiKey(e.target.value);
                     setIsValidated(false);
-                    setError('');
+                    setError("");
                   }}
                   placeholder="Enter your API key (AIza...)"
                   className="pr-24"
@@ -116,9 +143,13 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowApiKey(!showApiKey)}
-                    title={showApiKey ? 'Hide API key' : 'Show API key'}
+                    title={showApiKey ? "Hide API key" : "Show API key"}
                   >
-                    {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showApiKey ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                   <Button
                     type="button"
@@ -155,7 +186,7 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Don't have an API key?{' '}
+              Don't have an API key?{" "}
               <a
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
@@ -177,7 +208,8 @@ export function ApiKeySetup({ onApiKeyValidated, initialApiKey = '' }: ApiKeySet
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Once you've configured your API key, you can launch the viewer to analyze your slides.
+              Once you've configured your API key, you can launch the viewer to
+              analyze your slides.
             </p>
 
             <Button

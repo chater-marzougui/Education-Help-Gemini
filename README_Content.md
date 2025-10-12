@@ -10,18 +10,22 @@ Built with **Vite + React + TypeScript + Tailwind CSS + shadcn/ui**.
 
 - ✅ **Type-Safe**: Built with TypeScript for reliability and maintainability
 - 🎨 **Modern UI**: Beautiful interface using Tailwind CSS and shadcn/ui components
-- 📄 **PDF Viewing**: Open and navigate through PDF documents with intuitive controls
+- � **SEO Optimized**: Comprehensive SEO with meta tags, Open Graph, and Twitter Cards
+- 🎭 **Branded**: Professional logo and consistent branding across all pages
+- �📄 **PDF Viewing**: Open and navigate through PDF documents with intuitive controls
 - 🤖 **AI Analysis**: Get instant explanations of slides using Gemini AI
 - 💬 **Interactive Chat**: Ask questions about the PDF content and receive AI-powered responses
 - 📱 **Responsive Design**: Works on desktop and mobile devices
 - ⌨️ **Keyboard Shortcuts**: Navigate efficiently with keyboard controls
 - 🎯 **User-Friendly Controls**: Zoom, pan, navigate, and interact with PDF pages easily
 - 🔒 **Privacy-First**: API keys stored locally in browser, never sent to our servers
+- 🌐 **PWA Ready**: Installable as a Progressive Web App
 
 ## Tech Stack
 
 - **React 19** - UI Framework
 - **TypeScript** - Type safety
+- **React Router** - Client-side routing
 - **Vite** - Build tool and dev server
 - **Tailwind CSS** - Styling
 - **shadcn/ui** - UI components
@@ -65,6 +69,31 @@ npm run build
 
 The built files will be in the `dist` directory.
 
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+Then open `http://localhost:4173/Education-Help-Gemini/`
+
+### Deployment
+
+The application automatically deploys to GitHub Pages when you push to the `main` branch.
+
+**Live Demo**: [https://chater-marzougui.github.io/Education-Help-Gemini/](https://chater-marzougui.github.io/Education-Help-Gemini/)
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+#### Quick Deploy
+```bash
+git add .
+git commit -m "Your commit message"
+git push origin main
+```
+
+The GitHub Actions workflow will automatically build and deploy your changes.
+
 ## Usage
 
 1. **Configure API Key**: Enter your Google AI Studio API key on the setup page
@@ -85,6 +114,10 @@ The built files will be in the `dist` directory.
 ```
 Gemini_PDF_Helper/
 ├── src/
+│   ├── pages/
+│   │   ├── SetupPage.tsx            # API key setup page (/)
+│   │   ├── UploadPage.tsx           # PDF upload page (/upload)
+│   │   └── ViewerPage.tsx           # PDF viewer & chat page (/viewer)
 │   ├── components/
 │   │   ├── app/
 │   │   │   ├── ApiKeySetup.tsx      # API key configuration
@@ -98,12 +131,25 @@ Gemini_PDF_Helper/
 │   │   └── gemini.ts                # Gemini API integration
 │   ├── types/
 │   │   └── index.ts                 # TypeScript type definitions
-│   ├── App.tsx                      # Main application component
+│   ├── App.tsx                      # Main router component
 │   └── main.tsx                     # Application entry point
 ├── package.json
 ├── tsconfig.json
 └── vite.config.ts
 ```
+
+## Routing
+
+The application uses React Router with three main routes:
+
+- **`/`** - Setup page for API key configuration
+- **`/upload`** - File upload page
+- **`/viewer`** - PDF viewer with AI chat interface
+
+Navigation between pages is automatic:
+- After entering a valid API key, you're redirected to the upload page
+- After selecting a PDF, you're redirected to the viewer page
+- You can navigate back using the navigation buttons
 
 ## Security
 

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://chater-marzougui.github.io/Education-Help-Gemini/sitemap.xml
