@@ -15,7 +15,7 @@ export function SEO({
   keywords = 'PDF viewer, AI analysis, Gemini AI, PDF helper, education, document analysis, slide explanation, AI assistant',
   ogTitle,
   ogDescription,
-  ogImage = '/assets/logo.png'
+  ogImage = '/Education-Help-Gemini/assets/logo.png'
 }: SEOProps) {
   useEffect(() => {
     // Set page title
