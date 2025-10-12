@@ -12,13 +12,13 @@ export function SetupPage() {
   // Redirect to upload page if API key already exists
   useEffect(() => {
     if (apiKey) {
-      navigate('/upload');
+      navigate('/Education-Help-Gemini/upload');
     }
   }, [apiKey, navigate]);
 
   const handleApiKeyValidated = (key: string) => {
     setApiKey(key);
-    navigate('/upload');
+    navigate('/Education-Help-Gemini/upload');
   };
 
   return (

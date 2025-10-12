@@ -86,11 +86,11 @@
 4. **Ask questions**: Chat with the AI assistant about the content of your document
 
 <div align="center">
-  <img src="./assets/screenshot1.png" alt="Screenshot 1" width="80%">
+  <img src="./public/assets/screenshot1.png" alt="Screenshot 1" width="80%">
 </div>
 <br />
 <div align="center">
-  <img src="./assets/screenshot2.png" alt="Screenshot 2" width="80%">
+  <img src="./public/assets/screenshot2.png" alt="Screenshot 2" width="80%">
 </div>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

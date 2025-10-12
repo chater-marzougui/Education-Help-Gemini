@@ -29,7 +29,7 @@ export function ViewerPage() {
   // Load file from sessionStorage on mount
   useEffect(() => {
     if (!apiKey) {
-      navigate('/');
+      navigate('/Education-Help-Gemini/');
       return;
     }
 
@@ -37,7 +37,7 @@ export function ViewerPage() {
     const pdfName = sessionStorage.getItem('selectedPDFName');
 
     if (!pdfData || !pdfName) {
-      navigate('/upload');
+      navigate('/Education-Help-Gemini/upload');
       return;
     }
 
@@ -60,13 +60,13 @@ export function ViewerPage() {
   const handleBackToSetup = useCallback(() => {
     sessionStorage.removeItem('selectedPDF');
     sessionStorage.removeItem('selectedPDFName');
-    navigate('/');
+    navigate('/Education-Help-Gemini/');
   }, [navigate]);
 
   const handleUploadNew = useCallback(() => {
     sessionStorage.removeItem('selectedPDF');
     sessionStorage.removeItem('selectedPDFName');
-    navigate('/upload');
+    navigate('/Education-Help-Gemini/upload');
   }, [navigate]);
 
   const handleSendMessage = useCallback(async (message: string) => {

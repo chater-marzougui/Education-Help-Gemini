@@ -12,7 +12,7 @@ export function UploadPage() {
   // Redirect to setup if no API key
   useEffect(() => {
     if (!apiKey) {
-      navigate('/');
+      navigate('/Education-Help-Gemini');
     }
   }, [apiKey, navigate]);
 
@@ -22,14 +22,14 @@ export function UploadPage() {
     reader.onload = () => {
       sessionStorage.setItem('selectedPDF', reader.result as string);
       sessionStorage.setItem('selectedPDFName', file.name);
-      navigate('/viewer');
+      navigate('/Education-Help-Gemini/viewer');
     };
     reader.readAsDataURL(file);
   };
 
   const handleBackToSetup = () => {
     setApiKey('');
-    navigate('/');
+    navigate('/Education-Help-Gemini/');
   };
 
   return (

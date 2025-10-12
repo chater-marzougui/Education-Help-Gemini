@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 
 // Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/Education-Help-Gemini/pdf.worker.min.mjs';
 
 interface PDFViewerProps {
   file: File;
@@ -15,7 +15,7 @@ interface PDFViewerProps {
   onScaleChange: (scale: number) => void;
 }
 
-export function PDFViewer({ file, onPageChange, onPageRender, currentPage, scale, onScaleChange }: PDFViewerProps) {
+export function PDFViewer({ file, onPageChange, onPageRender, currentPage, scale, onScaleChange }: Readonly<PDFViewerProps>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [pdfDoc, setPdfDoc] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
   const [totalPages, setTotalPages] = useState(0);
