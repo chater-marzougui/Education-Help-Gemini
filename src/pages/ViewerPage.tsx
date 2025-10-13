@@ -10,7 +10,7 @@ import type { ChatMessage } from '@/types';
 import { sendToGemini } from '@/services/gemini';
 
 export function ViewerPage() {
-  const [apiKey] = localStorage.getItem('gemini_api_key') || '';
+  const apiKey = localStorage.getItem('gemini_api_key') || '';
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,6 +70,7 @@ export function ViewerPage() {
 
   const handleSendMessage = useCallback(async (message: string) => {
     if (!apiKey || isAnalyzing) return;
+    console.log('Sending message:', message, apiKey);
 
     const userMessage: ChatMessage = {
       role: 'user',
