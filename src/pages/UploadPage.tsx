@@ -2,11 +2,10 @@ import { useNavigate } from 'react-router-dom';
 import { FileUpload } from '@/components/app/FileUpload';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function UploadPage() {
-  const [apiKey, setApiKey] = useLocalStorage<string>('gemini_api_key', '');
+  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('gemini_api_key') || null);
   const navigate = useNavigate();
 
   // Redirect to setup if no API key

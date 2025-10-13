@@ -15,12 +15,12 @@ import { toast } from "sonner";
 
 interface ApiKeySetupProps {
   onApiKeyValidated: (apiKey: string) => void;
-  initialApiKey?: string;
+  initialApiKey: string | null;
 }
 
 export function ApiKeySetup({
   onApiKeyValidated,
-  initialApiKey = "",
+  initialApiKey = null,
 }: Readonly<ApiKeySetupProps>) {
   const [apiKey, setApiKey] = useState(initialApiKey);
   const [showApiKey, setShowApiKey] = useState(false);
@@ -29,7 +29,7 @@ export function ApiKeySetup({
   const [error, setError] = useState("");
 
   const handleValidate = async () => {
-    if (!apiKey.trim()) {
+    if (!apiKey?.trim()) {
       setError("Please enter an API key");
       return;
     }
@@ -60,6 +60,17 @@ export function ApiKeySetup({
   };
 
   const handleSave = () => {
+    if (!apiKey) {
+      toast.error("API key cannot be empty.");
+      return;
+    } else if (apiKey.length < 12) {
+      toast.error("API key seems too short. Please check and try again.");
+      return;
+    }
+    if (apiKey?.trim() && !isValidated) {
+      toast.error("Please validate the API key before saving.");
+      return;
+    }
     if (isValidated && apiKey) {
       localStorage.setItem("gemini_api_key", apiKey);
       onApiKeyValidated(apiKey);
@@ -128,7 +139,7 @@ export function ApiKeySetup({
                 <Input
                   id="apiKey"
                   type={showApiKey ? "text" : "password"}
-                  value={apiKey}
+                  value={apiKey || ""}
                   onChange={(e) => {
                     setApiKey(e.target.value);
                     setIsValidated(false);

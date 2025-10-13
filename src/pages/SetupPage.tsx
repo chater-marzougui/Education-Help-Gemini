@@ -2,11 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { ApiKeySetup } from "@/components/app/ApiKeySetup";
 import { Logo } from "@/components/app/Logo";
 import { SEO } from "@/components/app/SEO";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function SetupPage() {
-  const [apiKey, setApiKey] = useLocalStorage<string>("gemini_api_key", "");
+  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('gemini_api_key') || null);
   const navigate = useNavigate();
 
   // Redirect to upload page if API key already exists
