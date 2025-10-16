@@ -16,14 +16,8 @@ export function UploadPage() {
   }, [apiKey, navigate]);
 
   const handleFileSelect = (file: File) => {
-    // Store the file in sessionStorage for the viewer page
-    const reader = new FileReader();
-    reader.onload = () => {
-      sessionStorage.setItem('selectedPDF', reader.result as string);
-      sessionStorage.setItem('selectedPDFName', file.name);
-      navigate('../viewer');
-    };
-    reader.readAsDataURL(file);
+    // Pass the file directly through navigation state
+    navigate('../viewer', { state: { file } });
   };
 
   const handleBackToSetup = () => {

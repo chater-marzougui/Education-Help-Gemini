@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PDFViewer } from '@/components/app/PDFViewer';
 import { ChatInterface } from '@/components/app/ChatInterface';
 import { Logo } from '@/components/app/Logo';
@@ -12,6 +12,7 @@ import { sendToGemini } from '@/services/gemini';
 export function ViewerPage() {
   const apiKey = localStorage.getItem('gemini_api_key') || '';
   const navigate = useNavigate();
+  const location = useLocation();
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1);
@@ -25,46 +26,35 @@ export function ViewerPage() {
   ]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  // Load file from sessionStorage on mount
+  // Load file from navigation state on mount
   useEffect(() => {
     if (!apiKey) {
       navigate('../');
       return;
     }
 
-    const pdfData = sessionStorage.getItem('selectedPDF');
-    const pdfName = sessionStorage.getItem('selectedPDFName');
+    const stateFile = location.state?.file as File | undefined;
 
-    if (!pdfData || !pdfName) {
+    if (!stateFile) {
       navigate('../upload');
       return;
     }
 
-    // Convert base64 back to File
-    fetch(pdfData)
-      .then(res => res.blob())
-      .then(blob => {
-        const file = new File([blob], pdfName, { type: 'application/pdf' });
-        setFile(file);
-        setMessages([
-          {
-            role: 'system',
-            content: `PDF "${pdfName}" loaded successfully! You can now ask questions or analyze slides.`,
-            timestamp: Date.now()
-          }
-        ]);
-      });
-  }, [apiKey, navigate]);
+    setFile(stateFile);
+    setMessages([
+      {
+        role: 'system',
+        content: `PDF "${stateFile.name}" loaded successfully! You can now ask questions or analyze slides.`,
+        timestamp: Date.now()
+      }
+    ]);
+  }, [apiKey, navigate, location.state]);
 
   const handleBackToSetup = useCallback(() => {
-    sessionStorage.removeItem('selectedPDF');
-    sessionStorage.removeItem('selectedPDFName');
     navigate('../');
   }, [navigate]);
 
   const handleUploadNew = useCallback(() => {
-    sessionStorage.removeItem('selectedPDF');
-    sessionStorage.removeItem('selectedPDFName');
     navigate('../upload');
   }, [navigate]);
 
