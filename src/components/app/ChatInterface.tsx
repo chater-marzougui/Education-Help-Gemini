@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import type { ChatMessage } from '@/types';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Send, Bot, Trash2 } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import { useEffect, useRef, useState } from "react";
+import type { ChatMessage } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, Bot, Trash2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface ChatInterfaceProps {
   messages: ChatMessage[];
@@ -13,27 +13,46 @@ interface ChatInterfaceProps {
   isAnalyzing: boolean;
 }
 
-export function ChatInterface({ messages, onSendMessage, onAnalyzeSlide, onClearChat, isAnalyzing }: ChatInterfaceProps) {
-  const [input, setInput] = useState('');
+function getMessageBgColor(role: string) {
+  switch (role) {
+    case "user":
+      return "bg-primary text-primary-foreground";
+    case "system":
+      return "bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100";
+    case "error":
+      return "bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100";
+    default:
+      return "bg-muted";
+  }
+}
+
+export function ChatInterface({
+  messages,
+  onSendMessage,
+  onAnalyzeSlide,
+  onClearChat,
+  isAnalyzing,
+}: Readonly<ChatInterfaceProps>) {
+  const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSend = () => {
     if (input.trim() && !isAnalyzing) {
       onSendMessage(input.trim());
-      setInput('');
+      setInput("");
       if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.height = "auto";
       }
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -42,8 +61,8 @@ export function ChatInterface({ messages, onSendMessage, onAnalyzeSlide, onClear
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
     // Auto-resize
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.min(e.target.scrollHeight, 150) + 'px';
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 150) + "px";
   };
 
   return (
@@ -56,7 +75,7 @@ export function ChatInterface({ messages, onSendMessage, onAnalyzeSlide, onClear
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
-            {messages.filter(m => m.role === 'user').length} messages
+            {messages.filter((m) => m.role === "user").length} messages
           </span>
           <Button
             variant="ghost"
@@ -73,23 +92,17 @@ export function ChatInterface({ messages, onSendMessage, onAnalyzeSlide, onClear
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
           <div
-            key={index}
+            key={index + 1}
             className={`flex ${
-              message.role === 'user' ? 'justify-end' : 'justify-start'
+              message.role === "user" ? "justify-end" : "justify-start"
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-lg p-3 ${
-                message.role === 'user'
-                  ? 'bg-primary text-primary-foreground'
-                  : message.role === 'system'
-                  ? 'bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100'
-                  : message.role === 'error'
-                  ? 'bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100'
-                  : 'bg-muted'
-              }`}
+              className={`max-w-[80%] rounded-lg p-3 ${getMessageBgColor(
+                message.role
+              )}`}
             >
-              {message.type === 'markdown' && message.role !== 'user' ? (
+              {message.type === "markdown" && message.role !== "user" ? (
                 <div className="prose prose-sm dark:prose-invert max-w-none">
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
@@ -99,8 +112,8 @@ export function ChatInterface({ messages, onSendMessage, onAnalyzeSlide, onClear
               {message.timestamp && (
                 <p className="text-xs opacity-70 mt-1">
                   {new Date(message.timestamp).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </p>
               )}

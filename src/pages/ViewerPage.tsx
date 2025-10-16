@@ -14,7 +14,7 @@ export function ViewerPage() {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [scale, setScale] = useState(1.0);
+  const [scale, setScale] = useState(1);
   const [currentImageData, setCurrentImageData] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
