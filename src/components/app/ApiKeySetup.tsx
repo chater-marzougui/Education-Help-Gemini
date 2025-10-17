@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Check, Save, Trash2 } from "lucide-react";
 import { validateApiKey } from "@/services/gemini";
 import { toast } from "sonner";
+import CryptoJS from "crypto-js";
 
 interface ApiKeySetupProps {
   onApiKeyValidated: (apiKey: string) => void;
@@ -72,7 +73,8 @@ export function ApiKeySetup({
       return;
     }
     if (isValidated && apiKey) {
-      localStorage.setItem("gemini_api_key", apiKey);
+      const encrypted = CryptoJS.AES.encrypt(apiKey, "apiKey").toString();
+      localStorage.setItem("gemini_api_key", encrypted);
       onApiKeyValidated(apiKey);
     }
   };
@@ -85,7 +87,7 @@ export function ApiKeySetup({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader className="space-y-3">
           <CardTitle className="text-3xl font-bold text-center">
@@ -108,8 +110,8 @@ export function ApiKeySetup({
             <div
               className={`p-4 rounded-lg ${
                 isValidated
-                  ? "bg-green-50 border border-green-200"
-                  : "bg-gray-50 border border-gray-200"
+                  ? "bg-card/50 border border-green-200"
+                  : "bg-card/80 border border-gray-200"
               }`}
             >
               <div className="flex items-center gap-2 text-sm font-medium">
@@ -122,11 +124,11 @@ export function ApiKeySetup({
               </div>
             </div>
 
-            <div className="p-4 rounded-lg bg-blue-50 border border-blue-200">
+            <div className="p-4 rounded-lg border border-blue-200">
               <div className="flex gap-3">
                 <div className="text-2xl">🔒</div>
                 <div className="flex-1 text-sm">
-                  <strong>Security Notice:</strong> Your API key is stored
+                  <strong>Security Notice:</strong> Your API key is encrypted
                   locally in your browser and never sent to our servers. We
                   prioritize your privacy and security.
                 </div>

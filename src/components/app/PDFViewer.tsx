@@ -86,7 +86,7 @@ export function PDFViewer({ file, onPageChange, onPageRender, currentPage, scale
   };
 
   const handleZoomIn = () => {
-    const newScale = Math.min(scale * 1.2, 3.0);
+    const newScale = Math.min(scale * 1.2, 3);
     onScaleChange(newScale);
   };
 
@@ -100,7 +100,7 @@ export function PDFViewer({ file, onPageChange, onPageRender, currentPage, scale
     if (container && canvasRef.current) {
       const containerWidth = container.clientWidth - 40;
       const canvasWidth = canvasRef.current.width / scale;
-      const newScale = Math.max(0.25, Math.min(3.0, containerWidth / canvasWidth));
+      const newScale = Math.max(0.25, Math.min(3, containerWidth / canvasWidth));
       onScaleChange(newScale);
     }
   };
@@ -159,11 +159,11 @@ export function PDFViewer({ file, onPageChange, onPageRender, currentPage, scale
       </div>
 
       {/* Canvas */}
-      <div className="flex-1 overflow-auto bg-gray-100 p-4">
+      <div className="flex-1 overflow-auto bg-background/80 p-4">
         <div className="flex items-start justify-center min-h-full">
           <canvas
             ref={canvasRef}
-            className="shadow-lg bg-white max-w-full h-auto"
+            className="shadow-lg bg-background max-w-full h-auto"
           />
         </div>
       </div>

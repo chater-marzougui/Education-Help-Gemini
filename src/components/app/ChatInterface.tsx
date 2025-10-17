@@ -66,7 +66,7 @@ export function ChatInterface({
   };
 
   return (
-    <div className="flex flex-col h-full bg-card">
+    <div className="flex flex-col h-full bg-card max-h-[90vh] ">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export function ChatInterface({
             onChange={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Ask a question about the slide..."
-            className="resize-none min-h-[80px]"
+            className="resize-none min-h-[70px]"
             disabled={isAnalyzing}
           />
           <div className="flex flex-col gap-2">

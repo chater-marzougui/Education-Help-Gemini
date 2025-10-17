@@ -1,7 +1,13 @@
-import { useRef, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Upload, FileText } from 'lucide-react';
+import { useRef, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Upload, FileText } from "lucide-react";
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;
@@ -9,7 +15,7 @@ interface FileUploadProps {
 
 export function FileUpload({ onFileSelect }: Readonly<FileUploadProps>) {
   const [isDragging, setIsDragging] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -25,7 +31,7 @@ export function FileUpload({ onFileSelect }: Readonly<FileUploadProps>) {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       handleFile(files[0]);
@@ -40,15 +46,16 @@ export function FileUpload({ onFileSelect }: Readonly<FileUploadProps>) {
   };
 
   const handleFile = (file: File) => {
-    setError('');
-    
-    if (file.type !== 'application/pdf') {
-      setError('Please select a PDF file');
+    setError("");
+
+    if (file.type !== "application/pdf") {
+      setError("Please select a PDF file");
       return;
     }
 
-    if (file.size > 50 * 1024 * 1024) { // 50MB limit
-      setError('File size must be less than 50MB');
+    if (file.size > 50 * 1024 * 1024) {
+      // 50MB limit
+      setError("File size must be less than 50MB");
       return;
     }
 
@@ -56,7 +63,7 @@ export function FileUpload({ onFileSelect }: Readonly<FileUploadProps>) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+    <div className="min-h-screen  flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-xl">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-3xl font-bold">Upload your PDF</CardTitle>
@@ -68,8 +75,8 @@ export function FileUpload({ onFileSelect }: Readonly<FileUploadProps>) {
           <div
             className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
               isDragging
-                ? 'border-primary bg-primary/5'
-                : 'border-gray-300 hover:border-primary/50'
+                ? "border-primary bg-primary/5"
+                : "border-gray-300 hover:border-primary/50"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}

@@ -5,17 +5,29 @@ import { ChatInterface } from "@/components/app/ChatInterface";
 import { Logo } from "@/components/app/Logo";
 import { SEO } from "@/components/app/SEO";
 import { ModelSelector } from "@/components/app/ModelSelector";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ArrowLeft, Upload, Settings } from "lucide-react";
 import type { ChatMessage, GeminiModel } from "@/types";
 import { sendToGemini } from "@/services/gemini";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useTheme } from "@/hooks/useTheme";
+import { getApiKey } from "@/lib/utils";
 
 export function ViewerPage() {
-  const apiKey = localStorage.getItem("gemini_api_key") || "";
+  const apiKey = getApiKey();
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
   const [file, setFile] = useState<File | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1);
@@ -27,7 +39,6 @@ export function ViewerPage() {
     "gemini_model",
     "gemini-2.0-flash-exp"
   );
-  const [showSettings, setShowSettings] = useState(false);
   const [contextSlideCount, setContextSlideCount] = useLocalStorage<number>(
     "context_slide_count",
     2
@@ -90,7 +101,6 @@ export function ViewerPage() {
   const handleSendMessage = useCallback(
     async (message: string) => {
       if (!apiKey || isAnalyzing) return;
-      console.log("Sending message:", message, apiKey);
 
       const userMessage: ChatMessage = {
         role: "user",
@@ -291,14 +301,59 @@ export function ViewerPage() {
               <Upload className="h-4 w-4 mr-2" />
               New PDF
             </Button>
-            <Button
-              variant={showSettings ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader>
+                  <DialogTitle>Settings</DialogTitle>
+                  <DialogDescription>
+                    Customize your AI assistant and appearance preferences
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-6 py-4">
+                  <div>
+                    <h3 className="font-semibold text-sm mb-3">
+                      AI Configuration
+                    </h3>
+                    <ModelSelector
+                      selectedModel={selectedModel}
+                      onModelChange={setSelectedModel}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      Context Slides
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Number of previous slides to include for context
+                    </p>
+                    <div className="flex gap-2">
+                      {[0, 1, 2, 3, 4].map((count) => (
+                        <Button
+                          key={count}
+                          variant={
+                            contextSlideCount === count ? "default" : "outline"
+                          }
+                          size="sm"
+                          onClick={() => setContextSlideCount(count)}
+                          className="flex-1"
+                        >
+                          {count}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <ThemeToggle theme={theme} onToggle={toggleTheme} />
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">📄</span>
@@ -321,50 +376,14 @@ export function ViewerPage() {
           </div>
 
           {/* Chat Interface */}
-          <div className="w-96 border-l flex flex-col">
-            {showSettings && (
-              <div className="border-b bg-muted/30 p-4 space-y-4">
-                <div>
-                  <h3 className="font-semibold text-sm mb-3">
-                    AI Configuration
-                  </h3>
-                  <ModelSelector
-                    selectedModel={selectedModel}
-                    onModelChange={setSelectedModel}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Context Slides</Label>
-                  <p className="text-xs text-muted-foreground">
-                    Number of previous slides to include for context
-                  </p>
-                  <div className="flex gap-2">
-                    {[0, 1, 2, 3, 4].map((count) => (
-                      <Button
-                        key={count}
-                        variant={
-                          contextSlideCount === count ? "default" : "outline"
-                        }
-                        size="sm"
-                        onClick={() => setContextSlideCount(count)}
-                        className="flex-1"
-                      >
-                        {count}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="flex-1">
-              <ChatInterface
-                messages={messages}
-                onSendMessage={handleSendMessage}
-                onAnalyzeSlide={handleAnalyzeSlide}
-                onClearChat={handleClearChat}
-                isAnalyzing={isAnalyzing}
-              />
-            </div>
+          <div className="w-96 border-l">
+            <ChatInterface
+              messages={messages}
+              onSendMessage={handleSendMessage}
+              onAnalyzeSlide={handleAnalyzeSlide}
+              onClearChat={handleClearChat}
+              isAnalyzing={isAnalyzing}
+            />
           </div>
         </div>
       </div>
