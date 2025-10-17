@@ -5,7 +5,9 @@ import { SEO } from "@/components/app/SEO";
 import { useState } from "react";
 
 export function SetupPage() {
-  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('gemini_api_key') || null);
+  const [apiKey, setApiKey] = useState<string | null>(
+    localStorage.getItem("gemini_api_key") || null
+  );
   const navigate = useNavigate();
 
   const handleApiKeyValidated = (key: string) => {

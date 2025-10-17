@@ -26,3 +26,11 @@ export interface ApiKeyConfig {
   key: string;
   validated: boolean;
 }
+
+export type GeminiModel = 'gemini-2.0-flash-exp' | 'gemini-1.5-flash' | 'gemini-1.5-pro';
+
+export interface ModelConfig {
+  id: GeminiModel;
+  name: string;
+  description: string;
+}

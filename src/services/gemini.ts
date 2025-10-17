@@ -1,19 +1,53 @@
-import type { ChatMessage, GeminiResponse } from "@/types";
+import type { ChatMessage, GeminiResponse, GeminiModel } from "@/types";
 
-const GEMINI_API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+const GEMINI_API_BASE_URL =
+  "https://generativelanguage.googleapis.com/v1beta/models";
+
+export const GEMINI_MODELS = {
+  'gemini-2.0-flash-exp': {
+    id: 'gemini-2.0-flash-exp' as GeminiModel,
+    name: 'Gemini 2.0 Flash',
+    description: 'Latest experimental model - Fast and efficient',
+  },
+  'gemini-1.5-flash': {
+    id: 'gemini-1.5-flash' as GeminiModel,
+    name: 'Gemini 1.5 Flash',
+    description: 'Fast responses with good quality',
+  },
+  'gemini-1.5-pro': {
+    id: 'gemini-1.5-pro' as GeminiModel,
+    name: 'Gemini 1.5 Pro',
+    description: 'Best quality, slower responses',
+  },
+} as const;
 
 export async function sendToGemini(
   apiKey: string,
   message: string,
   imageData: string | null,
-  chatHistory: ChatMessage[]
+  chatHistory: ChatMessage[],
+  model: GeminiModel = 'gemini-2.0-flash-exp',
+  contextImages: string[] = []
 ): Promise<{ content: string; type: "text" | "markdown" }> {
   const parts: Array<{
     text?: string;
     inlineData?: { mimeType: string; data: string };
   }> = [{ text: message }];
 
+  // Add context images (previous slides) first
+  if (contextImages.length > 0) {
+    for (const imgData of contextImages) {
+      const base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+      parts.push({
+        inlineData: {
+          mimeType: "image/jpeg",
+          data: base64Data,
+        },
+      });
+    }
+  }
+
+  // Add current slide image last
   if (imageData) {
     const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
     parts.push({
@@ -24,23 +58,41 @@ export async function sendToGemini(
     });
   }
 
-  const systemPrompt = `You are a helpful assistant to help students prepare for exams. Users will ask
-questions about slides in a pdf, or questions mostly about in the context of the provided images.
-Keep your answers direct and short.
-IMPORTANT: Format your response as a JSON object: 'content' containing your actual response,
-and 'type' which is either 'text' for plain text or 'markdown' for markdown.
-Answer the questions in a way that is easy to understand and follow and even if the answer is not in the provided image answer basic knowledge.
-Prefer markdown formatting.
+  const systemPrompt = `You are an expert educational assistant designed to help students understand and study from PDF slides and course materials.
 
-the JSON object should look like this:
+**Your Primary Goals:**
+- Provide clear, concise, and educational explanations
+- Help students understand complex concepts
+- Answer questions based on the provided slide images
+- Offer study tips and memory aids when relevant
+
+**Context Information:**
+${contextImages.length > 0 ? `- You have been provided with ${contextImages.length} previous slide(s) for context` : '- No previous slides provided'}
+${imageData ? '- The LAST image shown is the current slide the student is asking about' : '- No current slide image provided'}
+
+**Response Guidelines:**
+1. Focus primarily on the LAST slide image (current slide) when analyzing or answering
+2. Use previous slides only for additional context if needed
+3. Structure your answers clearly with headings, bullet points, or numbered lists
+4. Highlight key concepts, definitions, and important points
+5. If the slide contains formulas or technical content, explain them step-by-step
+6. If asked about something not in the images, provide general educational knowledge
+7. Keep explanations student-friendly and accessible
+
+**Response Format:**
+Return your response as a JSON object with:
+- "content": Your complete answer (use Markdown for formatting)
+- "type": Always set to "markdown"
+
+Example format:
 {
-  "content": "your answer here",
+  "content": "## Key Concepts\\n\\n- **Point 1**: Explanation...\\n- **Point 2**: Explanation...",
   "type": "markdown"
-}
-`;
+}`;
 
   const chatHistoryContext = chatHistory
     .filter((msg) => msg.role === "user" || msg.role === "assistant")
+    .slice(-10) // Keep last 10 messages for context
     .map((msg) => ({
       role: msg.role,
       parts: [{ text: msg.content }],
@@ -60,7 +112,8 @@ the JSON object should look like this:
     ],
   };
 
-  const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+  const apiUrl = `${GEMINI_API_BASE_URL}/${model}:generateContent`;
+  const response = await fetch(`${apiUrl}?key=${apiKey}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +156,8 @@ the JSON object should look like this:
 
 export async function validateApiKey(apiKey: string): Promise<boolean> {
   try {
-    const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+    const apiUrl = `${GEMINI_API_BASE_URL}/gemini-2.0-flash-exp:generateContent`;
+    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

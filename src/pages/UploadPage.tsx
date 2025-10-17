@@ -1,28 +1,30 @@
-import { useNavigate } from 'react-router-dom';
-import { FileUpload } from '@/components/app/FileUpload';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { FileUpload } from "@/components/app/FileUpload";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function UploadPage() {
-  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('gemini_api_key') || null);
+  const [apiKey, setApiKey] = useState<string | null>(
+    localStorage.getItem("gemini_api_key") || null
+  );
   const navigate = useNavigate();
 
   // Redirect to setup if no API key
   useEffect(() => {
     if (!apiKey) {
-      navigate('../');
+      navigate("../");
     }
   }, [apiKey, navigate]);
 
   const handleFileSelect = (file: File) => {
     // Pass the file directly through navigation state
-    navigate('../viewer', { state: { file } });
+    navigate("../viewer", { state: { file } });
   };
 
   const handleBackToSetup = () => {
-    setApiKey('');
-    navigate('../');
+    setApiKey("");
+    navigate("../");
   };
 
   return (
